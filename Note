@@ -1,0 +1,2 @@
+scrapy runspider laixuatnganhang_spider.py -o result.txt
+
