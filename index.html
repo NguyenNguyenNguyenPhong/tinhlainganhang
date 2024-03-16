@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Data Table</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>API Data Table</h2>
+    <table id="data-table">
+        <!-- Table header will be populated dynamically -->
+    </table>
+
+    <script>
+        // Call the API and populate the table
+        fetch('http://localhost:5000/api/data')
+            .then(response => response.json())
+            .then(data => {
+                const header = data.header;
+                const tableData = data.data;
+
+                const table = document.getElementById('data-table');
+
+                // Create table header
+                const headerRow = document.createElement('tr');
+                header.forEach(col => {
+                    const th = document.createElement('th');
+                    th.textContent = col;
+                    headerRow.appendChild(th);
+                });
+                table.appendChild(headerRow);
+
+                // Populate table body
+                tableData.forEach(row => {
+                    const tr = document.createElement('tr');
+                    row.forEach(cell => {
+                        const td = document.createElement('td');
+                        td.textContent = cell;
+                        tr.appendChild(td);
+                    });
+                    table.appendChild(tr);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
+</body>
+</html>
