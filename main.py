@@ -1,6 +1,6 @@
 import pandas as pd
 
-file_path = r'D:\Project\scapyFinanal\cafef\cafef\spiders\result.txt'
+file_path = r'cafef/cafef/spiders/result.txt'
 
 # Đọc dữ liệu từ tệp tin
 with open(file_path, 'r', encoding='utf-8') as file:
