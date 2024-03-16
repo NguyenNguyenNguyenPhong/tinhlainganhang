@@ -33,13 +33,13 @@ class LaixuatnganhangSpider(scrapy.Spider):
 
         # Get the text content of each row in the table body
         rows = []
+        rows.append(header_columns)
         for row in tbody_element.find_elements(By.TAG_NAME, 'tr'):
             row_data = [cell.text.strip() for cell in row.find_elements(By.TAG_NAME, 'td')]
             rows.append(row_data)
         # Save the header columns to a JSON file with UTF-8 encoding
 
         with open('result.txt', 'w', encoding='utf-8') as file:
-            json.dump(header_columns, file, ensure_ascii=False)
             json.dump(rows, file, ensure_ascii=False)
 
     def closed(self, reason):

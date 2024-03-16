@@ -1,37 +1,35 @@
-import requests
-from bs4 import BeautifulSoup
+import pandas as pd
 
-url = "https://s.cafef.vn/lai-suat-ngan-hang.chn#data"
-res = requests.get(url)
-htmldiv = BeautifulSoup(res.content, 'html.parser')  # Specify parser
-htmldiv.encoding = 'utf-8'
-print(htmldiv)
+file_path = r'D:\Project\scapyFinanal\cafef\cafef\spiders\result.txt'
 
-tableData = htmldiv.find("tbody", {"id": "tb-interest-rate"})
-cellHeaders = htmldiv.find("thead", {"id": "header-table-interest"})
-jsonTitle = []
-# jsonTitle.append("VCB_BaoCaoLuyKe_6_Thang")
-jsonHeader = []
+# Đọc dữ liệu từ tệp tin
+with open(file_path, 'r', encoding='utf-8') as file:
+    data_txt = file.read()
 
-# Fix the cellHeaders checking for NoneType
-if cellHeaders:
-    cellHeader = cellHeaders.find("tr")  # Find the 'tr' tag within the thead
-    for header in cellHeader.find_all("th", limit=8):  # limit to 8 columns
-        jsonHeader.append(header.text.strip())
+# Tách dữ liệu thành các dòng
+lines = data_txt.split('], ')
 
-linesTable = tableData.find_all("tr")
-jsonData = []
+# Tạo một danh sách hai chiều từ các giá trị trong mỗi ô vuông
+data_list = []
+for line in lines:
+    row_data = line.strip('[]').split(', ')
+    # Loại bỏ dấu ngoặc kép từ các giá trị
+    row_data = [value.replace('"', '') for value in row_data]
+    data_list.append(row_data)
 
-for lineTable in linesTable:
-    cellTables = lineTable.find_all("td", limit=8)
-    jsonData_line = []
-    for cellTable in cellTables:
-        jsonData_line.append(cellTable.text.strip())
-    jsonData.append(jsonData_line)
+# In kết quả
+header = data_list[0]
+data = data_list[1:]
 
-jsonData.insert(0, jsonTitle)  # Insert jsonTitle without unpacking
-jsonData.insert(1, [""] + jsonHeader)  # Insert an empty string as the first element
+df = pd.DataFrame(data, columns=header)
+print(df)
+value = df.loc[0, 'Ngân hàng']
+print(value)
+# Lấy giá trị của cột 'Không kỳ hạn' tại dòng thứ 2
+value = df['Không kỳ hạn'][2]
+print(value)
+# Lấy giá trị của cột thứ 2 tại dòng thứ 3
+value = df.iloc[3, 2]
+print(value)
 
-# Printing for testing
-for data in jsonData:
-    print(data)
+

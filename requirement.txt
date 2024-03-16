@@ -4,3 +4,4 @@ openpyxl
 scrapy
 selenium
 Flask
+pandas
